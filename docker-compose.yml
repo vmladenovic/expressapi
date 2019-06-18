@@ -1,0 +1,32 @@
+version: '2'
+
+services:
+  node:
+    entrypoint: tail -F -n0 /etc/hosts
+    container_name: fs_node
+    image: node:10.13
+    working_dir: /app
+    volumes:
+      - ./:/app
+    environment:
+      - PORT=8093
+    ports:
+      - 8093:8093
+    depends_on:
+      - mongo
+    networks:
+      - lognet
+
+  mongo:
+    container_name: fs_mongo
+    image: mongo:4.0
+    networks:
+      - lognet
+
+networks:
+  lognet:
+    driver: bridge
+
+
+
+
