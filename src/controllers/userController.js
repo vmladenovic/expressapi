@@ -1,5 +1,5 @@
-import {JWT} from "../constants/jwt";
-import passport from 'passport';
+import { JWT } from "../constants/jwt";
+import passport from "passport";
 
 /**
  * @swagger
@@ -41,21 +41,21 @@ import passport from 'passport';
  *               type: string
  */
 export const create = (req, res, next) => {
-	passport.authenticate(JWT.authorization_name.REGISTER, (err, user, info) => {
-		if (err) {
-			console.error(err);
-		}
-		if (info !== undefined) {
-			res.status(422).send({...info, auth: false});
-		} else {
-			req.logIn(user, (error) => {
-				res.status(200).send({
-					auth: false,
-					user: user
-				});
-			});
-		}
-	})(req, res, next);
+  passport.authenticate(JWT.authorization_name.AUTHORIZE, (err, user, info) => {
+    if (err) {
+      console.error(err);
+    }
+    if (info !== undefined) {
+      res.status(422).send({ ...info, auth: false });
+    } else {
+      req.logIn(user, error => {
+        res.status(200).send({
+          auth: false,
+          user: user
+        });
+      });
+    }
+  })(req, res, next);
 };
 
 /**
@@ -91,15 +91,19 @@ export const create = (req, res, next) => {
  *               type: string
  */
 export const show = (req, res, next) => {
-	passport.authenticate(JWT.authorization_name.AUTHORIZE, {session: false}, (err, user, info) => {
-		if (err) {
-			return res.status(422).send({error: 'Authorization failed'});
-		}
+  passport.authenticate(
+    JWT.authorization_name.AUTHORIZE,
+    { session: false },
+    (err, user, info) => {
+      if (err) {
+        return res.status(422).send({ error: "Authorization failed" });
+      }
 
-		if (info !== undefined) {
-			return res.status(422).send({error: info.message});
-		} else {
-			return res.status(200).send({user: user});
-		}
-	})(req, res, next);
+      if (info !== undefined) {
+        return res.status(422).send({ error: info.message });
+      } else {
+        return res.status(200).send({ user: user });
+      }
+    }
+  )(req, res, next);
 };
