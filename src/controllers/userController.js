@@ -41,10 +41,13 @@ import passport from "passport";
  *               type: string
  */
 export const create = (req, res, next) => {
-  passport.authenticate(JWT.authorization_name.AUTHORIZE, (err, user, info) => {
+  passport.authenticate(JWT.authorization_name.REGISTER, (err, user, info) => {
     if (err) {
       console.error(err);
     }
+
+    console.log(info);
+
     if (info !== undefined) {
       res.status(422).send({ ...info, auth: false });
     } else {

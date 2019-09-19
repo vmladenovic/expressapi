@@ -1,4 +1,5 @@
 var mongoose = require("mongoose");
+import uuidv1 from "uuid/v1";
 /**
  * @swagger
  *
@@ -28,7 +29,7 @@ var mongoose = require("mongoose");
  *       "address": "Main street",
  *       "city": "New York",
  *       "state": "New York",
- *       "zipCode": "000000"
+ *       "zip_code": "000000"
  *     }
  *
  *   Location:
@@ -55,36 +56,42 @@ var mongoose = require("mongoose");
  *         updatedAt:
  *           type: string
  */
-const locationSchema = mongoose.Schema(
-  {
-    id: {
-      type: String,
-      unique: true,
-      required: true
-    },
-    title: {
-      type: String,
-      required: true
-    },
-    description: String,
-    address: {
-      type: String,
-      required: true
-    },
-    city: {
-      type: String,
-      required: true
-    },
-    state: String,
-    zip_code: String
+const locationSchema = mongoose.Schema({
+  id: {
+    type: String,
+    unique: true,
+    required: true,
+    default: uuidv1()
   },
-  { timestamps: true }
-);
+  title: {
+    type: String,
+    required: true
+  },
+  description: String,
+  address: {
+    type: String,
+    required: true
+  },
+  city: {
+    type: String,
+    required: true
+  },
+  state: String,
+  zip_code: String,
+  created_at: {
+    type: Date,
+    default: Date.now
+  },
+  updated_at: {
+    type: Date,
+    default: Date.now
+  }
+});
 
 locationSchema.methods.toJSON = function() {
   const obj = this.toObject();
-  // delete obj._id;
-  // delete obj.__v;
+  delete obj._id;
+  delete obj.__v;
 
   return obj;
 };

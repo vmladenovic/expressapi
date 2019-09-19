@@ -10,9 +10,11 @@ import {
 } from "../controllers/authController";
 import {
   create as locationCreate,
-  edit as locationShow
+  show as locationShow,
+  edit as locationEdit,
+  remove as locationRemove
 } from "../controllers/locationController";
-import Location from "./../models/location";
+// import Location from "./../models/location";
 
 const router = express.Router();
 var mongoose = require("mongoose");
@@ -32,22 +34,8 @@ router.post("/users/show", userShow);
 
 // Location controller routes
 router.post("/locations/create", locationCreate);
-
-router.get("/locations/:id", function(req, res, next) {
-  const id = req.params.id;
-
-  console.log(mongoose.Types.ObjectId.isValid(id));
-
-  Location.findById(req.params.id)
-    .then(location => {
-      if (!location) {
-        return res.status(404).end();
-      }
-
-      return res.status(200).json(location);
-    })
-
-    .catch(err => next(err));
-});
+router.get("/locations/:id", locationShow);
+router.patch("/locations/:id", locationEdit);
+router.patch("/locations/:id", locationRemove);
 
 export default router;
