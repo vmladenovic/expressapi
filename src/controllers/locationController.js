@@ -35,6 +35,7 @@ import uuidv1 from "uuid/v1";
  */
 export const create = (req, res, done) => {
   var location = new Location({
+    id: uuidv1(),
     title: req.body.title,
     description: req.body.description,
     address: req.body.address,
@@ -188,14 +189,50 @@ export const edit = function(req, res, done) {
  *             location:
  *               $ref: '#/definitions/Location'
  */
-export const remove = async function(req, res, next) {
+export const remove = async function(req, res) {
   const id = { id: req.params.id };
 
-  const location = await Location.findOneAndDelete(id);
+  await Location.findOneAndDelete(id)
+    .exec()
+    .then(doc => {
+      if (!doc) {
+        return res.status(404).end();
+      }
+      return res.status(204).end();
+    })
+    .catch(err => next(err));
+};
 
-  console.log(location);
-
-  if (!location) {
-    return res.status(404).send();
-  }
+/**
+ * @swagger
+ * /locations:
+ *   get:
+ *     summary: Show All Locations
+ *     description:
+ *       "Show All Locations"
+ *     tags:
+ *       - Locations
+ *     responses:
+ *       200:
+ *         description: OK!
+ *         schema:
+ *           type: object
+ *           properties:
+ *             location:
+ *               $ref: '#/definitions/Location'
+ *       404:
+ *          description: Location not found
+ *          schema:
+ *            type: object
+ *            properties:
+ *             location:
+ *               $ref: '#/definitions/Location'
+ */
+export const all = async function(req, res, next) {
+  Location.find({}, function(err, locations) {
+    if (err) {
+      res.send("404");
+    }
+    res.json(locations);
+  });
 };
