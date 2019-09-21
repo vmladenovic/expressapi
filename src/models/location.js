@@ -17,6 +17,8 @@ import uuidv1 from "uuid/v1";
  *         type: string
  *       address:
  *         type: string
+ *       streetNumber:
+ *         type: string
  *       city:
  *         type: string
  *       state:
@@ -27,8 +29,10 @@ import uuidv1 from "uuid/v1";
  *       "title": "someLocation",
  *       "description": "description",
  *       "address": "Main street",
+ *       "street_number": "1",
  *       "city": "New York",
  *       "state": "New York",
+ *       "country": "United States",
  *       "zip_code": "000000"
  *     }
  *
@@ -45,9 +49,13 @@ import uuidv1 from "uuid/v1";
  *           type: string
  *         address:
  *           type: string
+ *         streetNumber:
+ *           type: string
  *         city:
  *           type: string
  *         state:
+ *           type: string
+ *         country:
  *           type: string
  *         zipCode:
  *           type: string
@@ -67,8 +75,15 @@ const locationSchema = mongoose.Schema({
     type: String,
     required: true
   },
-  description: String,
+  description: {
+    type: String,
+    required: true
+  },
   address: {
+    type: String,
+    required: true
+  },
+  street_number: {
     type: String,
     required: true
   },
@@ -76,8 +91,18 @@ const locationSchema = mongoose.Schema({
     type: String,
     required: true
   },
-  state: String,
-  zip_code: String,
+  state: {
+    type: String,
+    required: true
+  },
+  country: {
+    type: String,
+    required: true
+  },
+  zip_code: {
+    type: String,
+    required: true
+  },
   created_at: {
     type: Date,
     default: Date.now
@@ -90,8 +115,8 @@ const locationSchema = mongoose.Schema({
 
 locationSchema.methods.toJSON = function() {
   const obj = this.toObject();
-  delete obj._id;
-  delete obj.__v;
+  // delete obj._id;
+  // delete obj.__v;
 
   return obj;
 };

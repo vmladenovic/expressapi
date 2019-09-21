@@ -39,7 +39,10 @@ export const create = (req, res, done) => {
     title: req.body.title,
     description: req.body.description,
     address: req.body.address,
+    street_number: req.body.street_number,
     city: req.body.city,
+    state: req.body.state,
+    country: req.body.country,
     zip_code: req.body.zip_code
   });
   location
