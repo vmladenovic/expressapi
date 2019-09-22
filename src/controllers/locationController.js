@@ -1,6 +1,8 @@
 import Location from "./../models/location";
 import mongoose from "mongoose";
 import uuidv1 from "uuid/v1";
+import url from "url";
+import querystring from "querystring";
 
 /**
  * @swagger
@@ -152,8 +154,7 @@ export const edit = function(req, res, done) {
     city: req.body.city,
     state: req.body.state,
     country: req.body.country,
-    zip_code: req.body.zip_code,
-    updated_at: Date.now
+    zip_code: req.body.zip_code
   };
 
   console.log(update);
@@ -226,6 +227,17 @@ export const remove = async function(req, res) {
  *       "Show All Locations"
  *     tags:
  *       - Locations
+ *     parameters:
+ *       - in: query
+ *         name: keyword
+ *         schema:
+ *           type: string
+ *           description: Return results for any string
+ *       - in: query
+ *         name: city
+ *         schema:
+ *           type: string
+ *           description: Return results for given city
  *     responses:
  *       200:
  *         description: OK!

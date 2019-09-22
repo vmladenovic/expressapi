@@ -15,7 +15,6 @@ import {
   remove as locationRemove,
   all as locationAll
 } from "../controllers/locationController";
-// import Location from "./../models/location";
 
 const router = express.Router();
 var mongoose = require("mongoose");
