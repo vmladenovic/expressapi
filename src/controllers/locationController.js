@@ -105,7 +105,7 @@ export const show = async function(req, res, next) {
 /**
  * @swagger
  * /locations/{id}:
- *   patch:
+ *   put:
  *     summary: Edit Location
  *     description:
  *       "Edit Location"
@@ -142,23 +142,27 @@ export const show = async function(req, res, next) {
  *               $ref: '#/definitions/Location'
  */
 export const edit = function(req, res, done) {
-  console.log(req.body);
-
   const id = { id: req.params.id };
 
   const update = {
     title: req.body.title,
     description: req.body.description,
     address: req.body.address,
+    street_number: req.body.street_number,
     city: req.body.city,
-    zip_code: req.body.zip_code
+    state: req.body.state,
+    country: req.body.country,
+    zip_code: req.body.zip_code,
+    updated_at: Date.now
   };
+
+  console.log(update);
 
   const location = Location.findOneAndUpdate(id, update, function(
     err,
     location
   ) {
-    res.send(location);
+    res.json(location);
   });
 
   console.log(location);
@@ -182,6 +186,13 @@ export const edit = function(req, res, done) {
  *           required: true
  *           description: Location id
  *     responses:
+ *       200:
+ *         description: OK!
+ *         schema:
+ *           type: object
+ *           properties:
+ *             location:
+ *               $ref: '#/definitions/Location'
  *       400:
  *         description: "Invalid location supplied"
  *       404:

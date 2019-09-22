@@ -33,7 +33,8 @@ import uuidv1 from "uuid/v1";
  *       "city": "New York",
  *       "state": "New York",
  *       "country": "United States",
- *       "zip_code": "000000"
+ *       "zip_code": "000000",
+ *       "updated_at": ""
  *     }
  *
  *   Location:

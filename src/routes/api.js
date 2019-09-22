@@ -36,7 +36,7 @@ router.post("/users/show", userShow);
 // Location controller routes
 router.post("/locations/create", locationCreate);
 router.get("/locations/:id", locationShow);
-router.patch("/locations/:id", locationEdit);
+router.put("/locations/:id", locationEdit);
 router.delete("/locations/:id", locationRemove);
 router.get("/locations", locationAll);
 
