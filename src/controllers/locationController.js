@@ -255,10 +255,103 @@ export const remove = async function(req, res) {
  *               $ref: '#/definitions/Location'
  */
 export const all = async function(req, res, next) {
-  Location.find({}, function(err, locations) {
-    if (err) {
-      res.send("404");
-    }
-    res.json(locations);
+  const keyword = req.query.keyword ? req.query.keyword : "";
+  const city = req.query.city ? req.query.city : "";
+
+  if (keyword && city) {
+    await Location.find(
+      {
+        $or: [
+          { title: { $in: [new RegExp(keyword, "i")] } },
+          { description: { $in: [new RegExp(keyword, "i")] } },
+          { address: { $in: [new RegExp(keyword, "i")] } },
+          { street_number: { $in: [new RegExp(keyword, "i")] } },
+          { city: { $in: [new RegExp(city, "i")] } },
+          { state: { $in: [new RegExp(keyword, "i")] } },
+          { country: { $in: [new RegExp(keyword, "i")] } },
+          { zip_code: { $in: [new RegExp(keyword, "i")] } }
+        ]
+      },
+      function(err, locations) {
+        if (err) {
+          res.send("404");
+        }
+        res.json(locations);
+      }
+    );
+  } else if (keyword) {
+    await Location.find(
+      {
+        $or: [
+          { title: { $in: [new RegExp(keyword, "i")] } },
+          { description: { $in: [new RegExp(keyword, "i")] } },
+          { address: { $in: [new RegExp(keyword, "i")] } },
+          { street_number: { $in: [new RegExp(keyword, "i")] } },
+          { city: { $in: [new RegExp(keyword, "i")] } },
+          { state: { $in: [new RegExp(keyword, "i")] } },
+          { country: { $in: [new RegExp(keyword, "i")] } },
+          { zip_code: { $in: [new RegExp(keyword, "i")] } }
+        ]
+      },
+      function(err, locations) {
+        if (err) {
+          res.send("404");
+        }
+        res.json(locations);
+      }
+    );
+  } else if (city) {
+    await Location.find(
+      {
+        $or: [{ city: { $in: [new RegExp(city, "i")] } }]
+      },
+      function(err, locations) {
+        if (err) {
+          res.send("404");
+        }
+        res.json(locations);
+      }
+    );
+  } else {
+    await Location.find({}, function(err, locations) {
+      if (err) {
+        res.send("404");
+      }
+      res.json(locations);
+    });
+  }
+
+  console.log({
+    keyword: new RegExp("^" + keyword + "$", "i"),
+    city: new RegExp("^" + city + "$", "i")
   });
+
+  // await Location.find(
+  //   {
+  //     $or: [
+  //       { title: [keyword] },
+
+  //     ]
+  //   },
+  //   function(err, locations) {
+  //     if (err) {
+  //       res.send("404");
+  //     }
+  //     res.json(locations);
+  //   }
+  // );
+  console.log(
+    await Location.find({
+      $or: [
+        { title: { $in: [keyword] } },
+        { description: { $in: [keyword] } },
+        { address: { $in: [keyword] } },
+        { street_number: { $in: [keyword] } },
+        { city: { $in: [keyword] } },
+        { state: { $in: [keyword] } },
+        { country: { $in: [keyword] } },
+        { zip_code: { $in: [keyword] } }
+      ]
+    })
+  );
 };
