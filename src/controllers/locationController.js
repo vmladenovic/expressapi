@@ -258,6 +258,8 @@ export const all = async function(req, res, next) {
   const keyword = req.query.keyword ? req.query.keyword : "";
   const city = req.query.city ? req.query.city : "";
 
+  console.log(req.query);
+
   if (keyword && city) {
     await Location.find(
       {
@@ -271,6 +273,7 @@ export const all = async function(req, res, next) {
           { country: { $in: [new RegExp(keyword, "i")] } },
           { zip_code: { $in: [new RegExp(keyword, "i")] } }
         ]
+        // $and: [{ city: { $in: [new RegExp(city, "i")] } }]
       },
       function(err, locations) {
         if (err) {
@@ -278,7 +281,9 @@ export const all = async function(req, res, next) {
         }
         res.json(locations);
       }
-    );
+    ).sort([["created_at", -1]]);
+
+    console.log(locations);
   } else if (keyword) {
     await Location.find(
       {
@@ -299,7 +304,7 @@ export const all = async function(req, res, next) {
         }
         res.json(locations);
       }
-    );
+    ).sort([["created_at", -1]]);
   } else if (city) {
     await Location.find(
       {
@@ -311,47 +316,13 @@ export const all = async function(req, res, next) {
         }
         res.json(locations);
       }
-    );
+    ).sort([["created_at", -1]]);
   } else {
     await Location.find({}, function(err, locations) {
       if (err) {
         res.send("404");
       }
       res.json(locations);
-    });
+    }).sort([["created_at", -1]]);
   }
-
-  console.log({
-    keyword: new RegExp("^" + keyword + "$", "i"),
-    city: new RegExp("^" + city + "$", "i")
-  });
-
-  // await Location.find(
-  //   {
-  //     $or: [
-  //       { title: [keyword] },
-
-  //     ]
-  //   },
-  //   function(err, locations) {
-  //     if (err) {
-  //       res.send("404");
-  //     }
-  //     res.json(locations);
-  //   }
-  // );
-  console.log(
-    await Location.find({
-      $or: [
-        { title: { $in: [keyword] } },
-        { description: { $in: [keyword] } },
-        { address: { $in: [keyword] } },
-        { street_number: { $in: [keyword] } },
-        { city: { $in: [keyword] } },
-        { state: { $in: [keyword] } },
-        { country: { $in: [keyword] } },
-        { zip_code: { $in: [keyword] } }
-      ]
-    })
-  );
 };
