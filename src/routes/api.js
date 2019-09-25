@@ -37,6 +37,6 @@ router.post("/locations/create", locationCreate);
 router.get("/locations/:id", locationShow);
 router.put("/locations/:id", locationEdit);
 router.delete("/locations/:id", locationRemove);
-router.get("/locations", locationAll);
+router.get("/locations?:keyword?:city", locationAll);
 
 export default router;
