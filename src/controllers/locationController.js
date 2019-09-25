@@ -268,7 +268,7 @@ export const all = async function(req, res, next) {
           { description: { $in: [new RegExp(query.keyword, "i")] } },
           { address: { $in: [new RegExp(query.keyword, "i")] } },
           { street_number: { $in: [new RegExp(query.keyword, "i")] } },
-          { city: { $in: [new RegExp(query.city, "i")] } },
+          // { city: { $in: [new RegExp(query.city, "i")] } },
           { state: { $in: [new RegExp(query.keyword, "i")] } },
           { country: { $in: [new RegExp(query.keyword, "i")] } },
           { zip_code: { $in: [new RegExp(query.keyword, "i")] } }
