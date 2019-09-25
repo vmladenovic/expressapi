@@ -255,17 +255,10 @@ export const remove = async function(req, res) {
  *               $ref: '#/definitions/Location'
  */
 export const all = async function(req, res, next) {
-  // const keyword = req.query.keyword ? req.query.keyword : "";
-  // const city = req.query.city ? req.query.city : "";
-
-  console.log("req.query", req.query);
-
   const query = {
     keyword: req.query.keyword ? req.query.keyword : "",
     city: req.query.city ? req.query.city : ""
   };
-
-  console.log("query", query.city);
 
   if (query.keyword && query.city) {
     await Location.find(
