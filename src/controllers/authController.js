@@ -1,6 +1,6 @@
-import {JWT} from '../constants/jwt';
-import passport from 'passport';
-import User from '../models/user';
+import { JWT } from "../constants/jwt";
+import passport from "passport";
+import User from "../models/user";
 import * as jwtService from "jsonwebtoken";
 
 /**
@@ -69,22 +69,26 @@ import * as jwtService from "jsonwebtoken";
  *               type: string
  */
 export const login = (req, res, next) => {
-	passport.authenticate(JWT.authorization_name.LOGIN, (error, user, info) => {
-		if (error) {
-			return res.status(401).send({...error, auth: false});
-		}
-		if (info !== undefined) {
-			return res.status(422).send({...info, auth: false});
-		} else {
-			return req.logIn(user, (error) => {
-				res.status(200).send({
-					auth: true,
-					token: jwtService.sign({id: user.id}, process.env.GROUPIVE_SESSION_SECRET),
-					user: user
-				});
-			});
-		}
-	})(req, res, next);
+  passport.authenticate(JWT.authorization_name.LOGIN, (error, user, info) => {
+    if (error) {
+      return res.status(401).send({ ...error, auth: false });
+    }
+    if (info !== undefined) {
+      return res.status(422).send({ ...info, auth: false });
+    } else {
+      return req.logIn(user, error => {
+        res.status(200).send({
+          auth: true,
+          token: jwtService.sign(
+            { id: user.id },
+            process.env.GROUPIVE_SESSION_SECRET
+          ),
+          user: user,
+          expires_in: 31536000000
+        });
+      });
+    }
+  })(req, res, next);
 };
 
 /**
@@ -149,22 +153,25 @@ export const login = (req, res, next) => {
  */
 
 export const confirm = async (req, res) => {
-	try {
-		const confirmationToken = req.params.confirmationToken;
-		const user = await User.confirmToken(confirmationToken);
-		if (user !== null) {
-			return req.logIn(user, (error) => {
-				// log in activated user automatically
-				res.status(200).send({
-					auth: true,
-					token: jwtService.sign({id: user.id}, process.env.GROUPIVE_SESSION_SECRET),
-					user: user
-				});
-			});
-		}
+  try {
+    const confirmationToken = req.params.confirmationToken;
+    const user = await User.confirmToken(confirmationToken);
+    if (user !== null) {
+      return req.logIn(user, error => {
+        // log in activated user automatically
+        res.status(200).send({
+          auth: true,
+          token: jwtService.sign(
+            { id: user.id },
+            process.env.GROUPIVE_SESSION_SECRET
+          ),
+          user: user
+        });
+      });
+    }
 
-		res.status(422).send({auth: false, message: 'Invalid token'});
-	} catch (error) {
-		res.status(500).send({auth:false, error: error});
-	}
+    res.status(422).send({ auth: false, message: "Invalid token" });
+  } catch (error) {
+    res.status(500).send({ auth: false, error: error });
+  }
 };
